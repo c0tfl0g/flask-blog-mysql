@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}文章{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename ='css/detail.css' ) }}">
+{% endblock %}
+
+{% block main %}
+    <h3 class="page-title">{{ question.title }}</h3>
+    <p class="question-info">
+        <span>作者:{{ question.author.username }}</span>
+        <span>时间:{{ question.create_time }}</span>
+
+    </p>
+
+    <hr>
+    <p class="question-content">{{question.content}}</p>
+    <hr>
+         <form action="{{ url_for('detail',question_id=question.id) }}" method="post">
+        <div class="form-group">
+            <input type="hidden" name="followed_id" value="{{ question.author.id }}">
+{#            <input type="hidden" name="question_id" value="{{ question.id }}">#}
+        </div>
+        <div class="form-group" style="text-align: left">
+            {% print(follow_flag) %}
+            <button class="btn btn-primary">关注</button>
+
+        </div>
+    </form>
+    <h4 class="comment-group-title">评论（{{ question.answers|length }}）：</h4>
+    <form action="{{ url_for('add_answer') }}" method="post">
+        <div class="form-group">
+            <input type="text" name="answer_content" class="form-control" placeholder="请填写评论">
+            <input type="hidden" name="question_id" value="{{ question.id }}">
+        </div>
+        <div class="form-group" style="text-align: right">
+            <button class="btn btn-primary">立即评论</button>
+        </div>
+    </form>
+
+    <ul class="answer-list">
+    {% for answer in question.answers %}
+        <li>
+            <div class="user-info">
+                <img src="{{ url_for('static',filename='images/drops.jpg') }}" class="avatar">
+                <span class="username">{{ answer.author.username }}</span>
+                <span class="create-time">{{ answer.create_time }}</span>
+                <p class="answer-content">{{ answer.content }}</p>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
